@@ -26,7 +26,7 @@ public class HotAirBalloonController : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        if (centerOfMass == null)
+        if (centerOfMass != null)
         {
             rb.centerOfMass = centerOfMass.localPosition;
         }
