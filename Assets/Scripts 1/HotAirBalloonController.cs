@@ -46,6 +46,7 @@ public class HotAirBalloonController : MonoBehaviour
 
     public void StartAscending()
     {
+        Debug.Log("상승 시작!");
         isBurnerOn = true;
         if (burnerSound != null && !burnerSound.isPlaying)
         {
