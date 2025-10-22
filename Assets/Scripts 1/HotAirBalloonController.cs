@@ -20,6 +20,10 @@ public class HotAirBalloonController : MonoBehaviour
     [Tooltip("하강을 위한 키")]
     public KeyCode ventKey = KeyCode.LeftShift;
     
+    [Header("Sound Effects (Optional)")]
+    public AudioSource burnerSound;
+    public AudioSource ventSound;
+    
     private bool isBurnerOn = false;
     private bool isVentOpen = false;
 
@@ -49,6 +53,42 @@ public class HotAirBalloonController : MonoBehaviour
         if (isVentOpen)
         {
             rb.AddForce(Vector3.down * downwardForce, ForceMode.Force);
+        }
+    }
+
+    public void StartAscending()
+    {
+        isBurnerOn = true;
+        if (burnerSound != null && !burnerSound.isPlaying)
+        {
+            burnerSound.Play(); // 버너 사운드 재생
+        }
+    }
+
+    public void StopAscending()
+    {
+        isBurnerOn = false;
+        if (burnerSound != null)
+        {
+            burnerSound.Stop(); // 버너 사운드 중지
+        }
+    }
+
+    public void StartDescending()
+    {
+        isVentOpen = true;
+        if (ventSound != null && !ventSound.isPlaying)
+        {
+            ventSound.Play(); // 벤트 사운드 재생
+        }
+    }
+
+    public void StopDescending()
+    {
+        isVentOpen = false;
+        if (ventSound != null)
+        {
+            ventSound.Stop(); // 벤트 사운드 중지
         }
     }
 }
