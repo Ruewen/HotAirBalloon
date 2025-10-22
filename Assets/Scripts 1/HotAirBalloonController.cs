@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class HotAirBalloonController : MonoBehaviour
 {
@@ -14,11 +13,6 @@ public class HotAirBalloonController : MonoBehaviour
     [Header("Physics Settings")]
     public Transform centerOfMass;
 
-    [Header("VR Input")]
-    [Tooltip("상승을 위한 키")]
-    public KeyCode burnerKey = KeyCode.Space;
-    [Tooltip("하강을 위한 키")]
-    public KeyCode ventKey = KeyCode.LeftShift;
     
     [Header("Sound Effects (Optional)")]
     public AudioSource burnerSound;
@@ -34,12 +28,6 @@ public class HotAirBalloonController : MonoBehaviour
         {
             rb.centerOfMass = centerOfMass.localPosition;
         }
-    }
-
-    void Update()
-    {
-        isBurnerOn = Input.GetKey(burnerKey);
-        isVentOpen = Input.GetKey(ventKey);
     }
 
     void FixedUpdate()
