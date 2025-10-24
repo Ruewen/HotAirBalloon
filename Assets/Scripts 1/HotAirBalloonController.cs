@@ -17,6 +17,9 @@ public class HotAirBalloonController : MonoBehaviour
     [Header("Sound Effects (Optional)")]
     public AudioSource burnerSound;
     public AudioSource ventSound;
+
+    [Header("Visual Effects (Optional)")]
+    public ParticleSystem burnerFireEffect;
     
     private bool isBurnerOn = false;
     private bool isVentOpen = false;
@@ -46,11 +49,14 @@ public class HotAirBalloonController : MonoBehaviour
 
     public void StartAscending()
     {
-        Debug.Log("상승 시작!");
         isBurnerOn = true;
         if (burnerSound != null && !burnerSound.isPlaying)
         {
             burnerSound.Play(); // 버너 사운드 재생
+        }
+        if (burnerFireEffect != null && !burnerFireEffect.isPlaying)
+        {
+            burnerFireEffect.Play();
         }
     }
 
@@ -60,6 +66,11 @@ public class HotAirBalloonController : MonoBehaviour
         if (burnerSound != null)
         {
             burnerSound.Stop(); // 버너 사운드 중지
+        }
+
+        if (burnerFireEffect != null)
+        {
+            burnerFireEffect.Stop();
         }
     }
 
