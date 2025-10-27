@@ -10,6 +10,14 @@ public class HotAirBalloonController : MonoBehaviour
     [Tooltip("하강 시 아래로 가하는 힘")]
     public float downwardForce = 5f;
 
+    [Header("Ground Check (Raycast)")]
+    [Tooltip("착륙 시 땅과 유지할 최소 거리")]
+    public float landingBuffer = 1.0f; // 땅에서 1m 위에 떠서 멈춤
+    [Tooltip("레이저가 감지할 땅(Ground) 레이어")]
+    public LayerMask groundLayer;
+    [Tooltip("레이저를 쏠 최대 거리")]
+    public float groundCheckDistance = 1000f;
+
     [Header("Physics Settings")]
     public Transform centerOfMass;
 
@@ -35,16 +43,41 @@ public class HotAirBalloonController : MonoBehaviour
 
     void FixedUpdate()
     {
+        float groundAltitude = -Mathf.Infinity; // 땅을 못 찾았을 때의 기본값
+        bool isGroundDetected = false;
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(rb.position, Vector3.down, out hit, groundCheckDistance, groundLayer))
+        {
+            groundAltitude = hit.point.y; // 부딪힌 지점의 Y좌표
+            isGroundDetected = true;
+        }
+
+        float dynamicMinAltitude = groundAltitude + landingBuffer;
+
+        Vector3 currentVelocity = Vector3.zero;
+
         // 1. 버너가 켜져 있으면 부력을 가한다.
         if (isBurnerOn)
         {
-            // ForceMode.Force는 질량에 영향을 받으므로 사실적인 느낌을 줍니다.
-            rb.AddForce(Vector3.up * upwardForce, ForceMode.Force);
+            currentVelocity.y = upwardForce;
         }
-        if (isVentOpen)
+        else if (isVentOpen)
         {
-            rb.AddForce(Vector3.down * downwardForce, ForceMode.Force);
+            if (isGroundDetected && rb.position.y > dynamicMinAltitude)
+            {
+                currentVelocity.y = -downwardForce;
+            }
         }
+        Vector3 newPosition = rb.position + currentVelocity * Time.fixedDeltaTime;
+        
+        if (isGroundDetected && newPosition.y < dynamicMinAltitude)
+        {
+            newPosition.y = dynamicMinAltitude;
+        }
+    
+        rb.MovePosition(newPosition);
     }
 
     public void StartAscending()
